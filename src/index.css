@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hover-effect {
+  cursor: pointer; /* Changes the cursor to indicate clickable items */
+  border-radius: 50%; /* Makes the background circle */
+  transition: background-color 0.3s; /* Smooth transition for the background color */
+}
+
+.hover-effect:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Light grey color on hover */
+  padding: 8px; /* Adds some space around the icon */
+}
+
+/* Assuming .hover-effect is applied to the <span> element */
+.material-symbols-outlined {
+  box-sizing: border-box; /* Include padding and border in the element's size */
+  padding: 8px;
+}
