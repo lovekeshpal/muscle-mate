@@ -1,6 +1,6 @@
 import Navbar from "./components/navbar/navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/home/home";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 const App = () => {
   const parent = {
@@ -11,7 +11,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-white dark:bg-black">
+      <div className="min-h-screen bg-white dark:bg-customDark">
         <Navbar />
         <div style={parent}>
           {/* Setup Routes */}

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.dark-mode {
+  @apply bg-[#1f1f1f];
+}
 .hover-effect {
   cursor: pointer; /* Changes the cursor to indicate clickable items */
   border-radius: 50%; /* Makes the background circle */
