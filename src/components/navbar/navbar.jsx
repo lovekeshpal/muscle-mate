@@ -50,16 +50,50 @@ const Navbar = () => {
                 checked={theme === "dark"}
                 onChange={toggleTheme}
               />
-              <span className="mr-5 text-sm font-bold text-gray-900 dark:text-gray-300">
-                {theme === "dark" ? "Light" : "Dark"}
-              </span>
               <div
-                className={`relative w-11 h-6 ${
-                  theme === "light" ? "bg-black" : "bg-gray-200"
-                } peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] ${
-                  theme === "light" ? "after:bg-white" : "after:bg-black"
-                } after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600`}
-              ></div>
+                className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-300 dark:peer-focus:ring-gray-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
+              >
+                {/* Sun Icon */}
+                <svg
+                  className={`absolute top-1/2 left-1 -translate-y-1/2 transform ${
+                    theme === "dark" ? "hidden" : ""
+                  } z-20`} // Increased z-index to ensure visibility
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={theme === "light" ? "black" : "white"}
+                  strokeWidth={2}
+                  width="20"
+                  height="20"
+                  style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,0.2))" }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v2m0 14v2m9-9h-2M5 12H3m14.364 6.364l-1.414-1.414M6.364 6.364L5 5M18 12a6 6 0 11-12 0 6 6 0 0112 0zm0 0l1.414 1.414M5 19l1.414-1.414"
+                  />
+                </svg>
+                {/* Moon Icon */}
+                <svg
+                  className={`absolute top-1/2 right-1 -translate-y-1/2 transform ${
+                    theme === "light" ? "hidden" : ""
+                  } z-20`} // Increased z-index to ensure visibility
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={theme === "light" ? "black" : "white"}
+                  strokeWidth={2}
+                  width="20"
+                  height="20"
+                  style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,0.5))" }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                  />
+                </svg>
+              </div>
             </label>
           </div>
         </div>
