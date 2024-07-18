@@ -1,6 +1,7 @@
 import Navbar from "./components/navbar/navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/home/home";
+import Login from "./components/login/login";
 
 const App = () => {
   const parent = {
@@ -17,6 +18,7 @@ const App = () => {
           {/* Setup Routes */}
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
           {/* Other components can still go here or inside specific pages */}
         </div>
