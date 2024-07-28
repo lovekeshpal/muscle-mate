@@ -1,30 +1,15 @@
-// Import React hooks
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const Navbar = () => {
-  // State to manage theme
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-
-  // Toggle theme function
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
-  // Apply theme class to body element
-  useEffect(() => {
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(theme);
-  }, [theme]);
-
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <>
-      <nav className="flex justify-between items-center p-4  dark:bg-customDark h-20 dark:border-b border-gray-600 shadow-md">
+      <nav className="flex justify-between items-center p-4 dark:bg-customDark h-20 dark:border-b border-gray-600 shadow-md">
         <div className="w-full flex justify-between dark:bg-customDark">
           <div className="flex items-center">
             <button
@@ -46,7 +31,7 @@ const Navbar = () => {
             {/* Sun Icon - Click to set theme to light */}
             {theme === "dark" && (
               <button
-                onClick={() => setTheme("light")}
+                onClick={toggleTheme}
                 className="material-symbols-outlined hover-effect"
                 style={{ color: "white" }}
               >
@@ -57,7 +42,7 @@ const Navbar = () => {
             {/* Moon Icon - Click to set theme to dark */}
             {theme === "light" && (
               <button
-                onClick={() => setTheme("dark")}
+                onClick={toggleTheme}
                 className="material-symbols-outlined hover-effect"
                 style={{ color: "black" }}
               >

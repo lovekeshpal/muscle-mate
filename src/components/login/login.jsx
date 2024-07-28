@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 const Login = () => {
-  // State to manage theme
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-
-  // Toggle theme function
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
-  // Apply theme class to body element
-  useEffect(() => {
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(theme);
-  }, [theme]);
-
   return (
     <div className=" flex items-center justify-center bg-white dark:bg-customDark">
       <div className="bg-white dark:bg-customDark p-8 rounded-lg shadow-md w-full max-w-md">
