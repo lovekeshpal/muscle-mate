@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await login({ username, password });
+      const response = await login({ email, password });
       if (response.token) {
         // Check if the response contains a token
         localStorage.setItem("user", JSON.stringify(response));
@@ -38,15 +38,15 @@ const Login = () => {
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="username"
             >
-              Username
+              Email
             </label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               id="username"
-              placeholder="Username"
+              placeholder="Email"
               required
             />
           </div>
