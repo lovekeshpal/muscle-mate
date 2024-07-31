@@ -1,16 +1,41 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { signup } from "../../api/auth"; // Adjust the import path as necessary
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add signup logic here
-    console.log({ email, username, password, confirmPassword });
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const userData = { email, username, password };
+      const response = await signup(userData);
+
+      // Log the response to see what is being returned
+      console.log("Signup response:", response);
+
+      // Check if the response is JSON
+      if (response.headers.get("content-type")?.includes("application/json")) {
+        const data = await response.json();
+        console.log("Signup successful:", data);
+        setError("");
+      } else {
+        const text = await response.text();
+        console.log("Non-JSON response:", text);
+        setError("Unexpected response format");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -84,6 +109,7 @@ const Signup = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
+          {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
