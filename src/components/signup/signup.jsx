@@ -1,41 +1,46 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { signup } from "../../api/auth"; // Adjust the import path as necessary
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { signup } from '../../api/auth';
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [error, setError] = useState(''); // Error state for any issues
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
     try {
-      const userData = { email, username, password };
-      const response = await signup(userData);
+      const response = await signup({
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+      });
 
-      // Log the response to see what is being returned
-      console.log("Signup response:", response);
+      console.log('Signup successful:', response);
+      setError(''); // Clear previous errors
 
-      // Check if the response is JSON
-      if (response.headers.get("content-type")?.includes("application/json")) {
-        const data = await response.json();
-        console.log("Signup successful:", data);
-        setError("");
-      } else {
-        const text = await response.text();
-        console.log("Non-JSON response:", text);
-        setError("Unexpected response format");
-      }
+      // Redirect to login page after successful signup
+      navigate('/login');
     } catch (err) {
-      setError(err.message);
+      console.error('Signup error:', err.message);
+      setError(err.message); // Set error message from the signup function
     }
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
   };
 
   return (
@@ -57,8 +62,8 @@ const Signup = () => {
               id="email"
               type="email"
               placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -73,8 +78,8 @@ const Signup = () => {
               id="username"
               type="text"
               placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={formData.username}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -89,8 +94,8 @@ const Signup = () => {
               id="password"
               type="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-6">
@@ -105,11 +110,12 @@ const Signup = () => {
               id="confirmPassword"
               type="password"
               placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={formData.confirmPassword}
+              onChange={handleChange}
             />
           </div>
-          {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
+          {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}{' '}
+          {/* Display error if any */}
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -121,7 +127,7 @@ const Signup = () => {
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-700 dark:text-gray-300">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link to="/login" className="text-blue-500 hover:text-blue-700">
               Login
             </Link>

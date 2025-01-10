@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../api/auth";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/auth';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,13 +15,13 @@ const Login = () => {
       const response = await login({ email, password });
       if (response.token) {
         // Check if the response contains a token
-        localStorage.setItem("user", JSON.stringify(response));
-        navigate("/home");
+        localStorage.setItem('user', JSON.stringify(response));
+        navigate('/home');
       } else {
-        setError("Login failed. No token received.");
+        setError('Login failed. No token received.');
       }
     } catch (err) {
-      setError("Login failed. Please check your credentials and try again.");
+      setError('Login failed. Please check your credentials and try again.');
     }
   };
 
@@ -31,7 +31,7 @@ const Login = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
           Login
         </h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -78,7 +78,7 @@ const Login = () => {
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-700 dark:text-gray-300">
-            New here?{" "}
+            New here?{' '}
             <Link to="/signup" className="text-blue-500 hover:text-blue-700">
               Sign up
             </Link>
