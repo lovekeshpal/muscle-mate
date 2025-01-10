@@ -75,14 +75,22 @@ const Navbar = () => {
             className="flex items-center text-black dark:text-white py-2"
           >
             <span className="material-symbols-outlined mr-2">home</span>
-            <span className="mt-1">Home</span>
+            <span >Home</span>
+          </Link>
+          <Link
+            onClick={toggleSidebar}
+            to="/profile"
+            className="flex items-center text-black dark:text-white py-2"
+          >
+            <span className="material-symbols-outlined mr-2">person</span>
+            <span >Profile</span>
           </Link>
           <Link
             onClick={toggleSidebar}
             className="flex items-center text-black dark:text-white py-2"
           >
             <span className="material-symbols-outlined mr-2">logout</span>
-            <span className="mt-1">Logout</span>
+            <span >Logout</span>
           </Link>
         </div>
       </div>
