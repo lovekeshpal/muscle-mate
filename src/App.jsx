@@ -4,6 +4,8 @@ import Home from "./components/home/home";
 import Login from "./components/login/login";
 import Signup from "./components/signup/signup";
 
+console.log(`Current environment mode: ${import.meta.env.MODE}`);
+
 const App = () => {
   const parent = {
     maxWidth: "1200px", // Default to desktop max-width
