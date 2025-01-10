@@ -40,7 +40,7 @@ const Profile = () => {
       <h1 className="dark:text-white">PROFILE</h1>
         <div className="relative w-32 h-32 mx-auto mb-4">
           <img
-            src={image || "default-profile.png"}
+            src={image || "https://i.ibb.co/SmkQDH0/Profile-Picture-Placeholder.jpg"}
             alt="Profile"
             className="w-full h-full rounded-full object-cover"
           />
