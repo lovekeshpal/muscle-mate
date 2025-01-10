@@ -23,7 +23,7 @@ const Signup = () => {
     try {
       const response = await signup({
         email: formData.email,
-        username: formData.username,
+        username: formData.username.toLowerCase(),
         password: formData.password,
       });
 
