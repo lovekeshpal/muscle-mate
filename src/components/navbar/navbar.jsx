@@ -10,6 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { logout: contextLogout } = useContext(AuthContext);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -21,11 +22,11 @@ const Navbar = () => {
       // Call the logout API first
       await logout(); // Perform the logout API request
 
-      // After successful logout, remove the token from localStorage
-      localStorage.removeItem('user');
+      // Update the context
+      contextLogout();
 
-      // After successful logout, redirect to the home page
-      navigate('/'); // Redirect to the home page after logout
+      // After successful logout, redirect to the login page
+      navigate('/login'); // Redirect to the login page after logout
     } catch (err) {
       console.error('Error during logout:', err);
       // Handle error if needed (like showing a message to the user)
@@ -114,7 +115,7 @@ const Navbar = () => {
                 <span className="material-symbols-outlined mr-2">person</span>
                 <span>Profile</span>
               </Link>
-              <div className="flex items-center text-black dark:text-white py-2">
+              <div className="flex items-center text-black dark:text-white py-2 cursor-pointer">
                 <span className="material-symbols-outlined mr-2">logout</span>
                 <span onClick={handleLogout}>Logout</span>
               </div>

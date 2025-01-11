@@ -66,28 +66,23 @@ export const signup = async (userData) => {
 // Logout function
 export const logout = async () => {
   try {
-    const token = JSON.parse(localStorage.getItem("token")); // Assuming the user object is saved in localStorage
-
-    // Check if the token exists
-    if (!token) {
-      throw new Error("No token found. Please log in again.");
-    }
+    const token = localStorage.getItem("token"); // Get the token from localStorage
 
     // Make the logout API request with the token
     const response = await fetch(`${BASE_URL}/api/users/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Use the token from the user object
+        Authorization: `Bearer ${token}`, // Use the token from localStorage
       },
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || "Logout failed. Please try again later.");
+      throw new Error(errorText || "Logout API failed.");
     }
 
-    // If the API responds successfully, remove the token and user data
+    // If the API responds successfully, remove the token
     localStorage.removeItem("token");
     console.log("Logout successful");
   } catch (error) {

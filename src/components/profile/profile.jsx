@@ -20,6 +20,7 @@ const Profile = () => {
     dob: '',
     age: '',
     phoneNumber: '',
+    username: '', 
     email: '',
     weight: '',
     height: '',
@@ -156,7 +157,25 @@ const Profile = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label className="dark:text-white">Username</label>
+            <input
+              type="text"
+              name="username"
+              className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+              onChange={handleChange}
+            />
+          </div>
+        <div>
+            <label className="dark:text-white">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+              onChange={handleChange}
+            />
+          </div>
           <div>
             <label className="dark:text-white">Date of Birth (DOB)</label>
             <input
@@ -166,6 +185,20 @@ const Profile = () => {
               onChange={handleChange}
             />
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="dark:text-white">Gender</label>
+          <select
+            name="gender"
+            className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+            onChange={handleChange}
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
           <div>
             <label className="dark:text-white">Age</label>
             <input
@@ -175,22 +208,11 @@ const Profile = () => {
               onChange={handleChange}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="dark:text-white">Phone Number</label>
             <input
               type="tel"
               name="phoneNumber"
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className="dark:text-white">Email</label>
-            <input
-              type="email"
-              name="email"
               className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
               onChange={handleChange}
             />
@@ -215,18 +237,6 @@ const Profile = () => {
               onChange={handleChange}
             />
           </div>
-        </div>
-        <div>
-          <label className="dark:text-white">Gender</label>
-          <select
-            name="gender"
-            className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
-            onChange={handleChange}
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
         </div>
         <div>
           <label className="dark:text-white">Address</label>
