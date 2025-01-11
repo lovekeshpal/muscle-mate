@@ -40,7 +40,7 @@ const Login = () => {
       });
 
       if (response.token) {
-        localStorage.setItem('user', JSON.stringify(response));
+        localStorage.setItem('token', JSON.stringify(response.token));
         navigate('/home');
       } else {
         // This case should not occur if login function works correctly. Handle invalid login explicitly
@@ -111,7 +111,7 @@ const Login = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
-              placeholder="******************"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

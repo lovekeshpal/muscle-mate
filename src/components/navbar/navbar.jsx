@@ -109,6 +109,22 @@ const Navbar = () => {
             <span className="material-symbols-outlined mr-2">person</span>
             <span>Profile</span>
           </Link>
+          <Link
+            onClick={toggleSidebar}
+            to="/login"
+            className="flex items-center text-black dark:text-white py-2"
+          >
+            <span className="material-symbols-outlined mr-2">login</span>
+            <span>Login</span>
+          </Link>
+          <Link
+            onClick={toggleSidebar}
+            to="/signup"
+            className="flex items-center text-black dark:text-white py-2"
+          >
+            <span className="material-symbols-outlined mr-2">app_registration</span>
+            <span>Sign Up</span>
+          </Link>
           <div className="flex items-center text-black dark:text-white py-2">
             <span className="material-symbols-outlined mr-2">logout</span>
             <span onClick={handleLogout}>Logout</span>

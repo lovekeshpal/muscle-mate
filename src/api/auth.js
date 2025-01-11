@@ -4,9 +4,9 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const login = async (credentials) => {
   try {
     const response = await fetch(`${BASE_URL}/api/users/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
     });
@@ -15,23 +15,22 @@ export const login = async (credentials) => {
       const errorText = await response.text();
       // Return a specific error based on the response status
       if (response.status === 400) {
-        throw new Error('Please enter valid email/username and password.');
+        throw new Error("Please enter valid email/username and password.");
       } else if (response.status === 401) {
-        throw new Error('Incorrect email/username or password.');
+        throw new Error("Incorrect email/username or password.");
       } else if (response.status === 404) {
-        throw new Error('User does not exist. Please sign up.');
+        throw new Error("User does not exist. Please sign up.");
       } else {
-        throw new Error(errorText || 'Login failed. Please try again later.');
+        throw new Error(errorText || "Login failed. Please try again later.");
       }
     }
 
     const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken); // Store token in localStorage
     return data;
   } catch (error) {
-    console.error('Error during login:', error.message);
+    console.error("Error during login:", error.message);
     throw new Error(
-      error.message || 'An unexpected error occurred during login.'
+      error.message || "An unexpected error occurred during login."
     );
   }
 };
@@ -40,9 +39,9 @@ export const login = async (credentials) => {
 export const signup = async (userData) => {
   try {
     const response = await fetch(`${BASE_URL}/api/users/signup`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
     });
@@ -50,16 +49,16 @@ export const signup = async (userData) => {
     // Check if the response is not OK (status code outside the range 200-299)
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || 'Signup failed. Please try again later.');
+      throw new Error(errorText || "Signup failed. Please try again later.");
     }
 
     // Parse the response as JSON
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error('Error during signup:', error.message);
+    console.error("Error during signup:", error.message);
     throw new Error(
-      error.message || 'An unexpected error occurred during signup.'
+      error.message || "An unexpected error occurred during signup."
     );
   }
 };
@@ -67,34 +66,34 @@ export const signup = async (userData) => {
 // Logout function
 export const logout = async () => {
   try {
-    const user = JSON.parse(localStorage.getItem('user')); // Assuming the user object is saved in localStorage
+    const user = JSON.parse(localStorage.getItem("token")); // Assuming the user object is saved in localStorage
 
     // Check if the token exists
-    if (!user || !user.token) {
-      throw new Error('No token found. Please log in again.');
+    if (!token) {
+      throw new Error("No token found. Please log in again.");
     }
 
     // Make the logout API request with the token
     const response = await fetch(`${BASE_URL}/api/users/logout`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`, // Use the token from the user object
       },
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || 'Logout failed. Please try again later.');
+      throw new Error(errorText || "Logout failed. Please try again later.");
     }
 
     // If the API responds successfully, remove the token and user data
-    localStorage.removeItem('user');
-    console.log('Logout successful');
+    localStorage.removeItem("token");
+    console.log("Logout successful");
   } catch (error) {
-    console.error('Error during logout:', error.message);
+    console.error("Error during logout:", error.message);
     throw new Error(
-      error.message || 'An unexpected error occurred during logout.'
+      error.message || "An unexpected error occurred during logout."
     );
   }
 };
