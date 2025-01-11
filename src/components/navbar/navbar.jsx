@@ -1,11 +1,33 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import { ThemeContext } from "../../context/ThemeContext";
+import { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../../context/ThemeContext';
+import { logout } from '../../api/auth';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const handleLogout = async () => {
+    try {
+      // Close the sidebar on logout
+      setIsSidebarOpen(false);
+
+      // Call the logout API first
+      await logout(); // Perform the logout API request
+
+      // After successful logout, remove the token from localStorage
+      localStorage.removeItem('user');
+
+      // After successful logout, redirect to the home page
+      navigate('/'); // Redirect to the home page after logout
+    } catch (err) {
+      console.error('Error during logout:', err);
+      // Handle error if needed (like showing a message to the user)
+    }
+  };
 
   return (
     <>
@@ -29,22 +51,22 @@ const Navbar = () => {
           </div>
           <div className="flex justify-end">
             {/* Sun Icon - Click to set theme to light */}
-            {theme === "dark" && (
+            {theme === 'dark' && (
               <button
                 onClick={toggleTheme}
                 className="material-symbols-outlined hover-effect"
-                style={{ color: "white" }}
+                style={{ color: 'white' }}
               >
                 light_mode
               </button>
             )}
 
             {/* Moon Icon - Click to set theme to dark */}
-            {theme === "light" && (
+            {theme === 'light' && (
               <button
                 onClick={toggleTheme}
                 className="material-symbols-outlined hover-effect"
-                style={{ color: "black" }}
+                style={{ color: 'black' }}
               >
                 dark_mode
               </button>
@@ -52,12 +74,14 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+
+      {/* Sidebar */}
       <div
         className={`fixed top-0 ${
-          isSidebarOpen ? "left-0" : "-left-full"
+          isSidebarOpen ? 'left-0' : '-left-full'
         } h-full w-64 bg-gray-100 dark:bg-customDark transition-all`}
       >
-        <div className="flex items-center p-4  bg-white  dark:bg-customDark h-20 dark:border-b border-gray-600">
+        <div className="flex items-center p-4 bg-white dark:bg-customDark h-20 dark:border-b border-gray-600">
           <button
             onClick={toggleSidebar}
             className="text-xl mr-2 font-bold text-gray-900 dark:text-white"
@@ -75,7 +99,7 @@ const Navbar = () => {
             className="flex items-center text-black dark:text-white py-2"
           >
             <span className="material-symbols-outlined mr-2">home</span>
-            <span >Home</span>
+            <span>Home</span>
           </Link>
           <Link
             onClick={toggleSidebar}
@@ -83,15 +107,12 @@ const Navbar = () => {
             className="flex items-center text-black dark:text-white py-2"
           >
             <span className="material-symbols-outlined mr-2">person</span>
-            <span >Profile</span>
+            <span>Profile</span>
           </Link>
-          <Link
-            onClick={toggleSidebar}
-            className="flex items-center text-black dark:text-white py-2"
-          >
+          <div className="flex items-center text-black dark:text-white py-2">
             <span className="material-symbols-outlined mr-2">logout</span>
-            <span >Logout</span>
-          </Link>
+            <span onClick={handleLogout}>Logout</span>
+          </div>
         </div>
       </div>
     </>

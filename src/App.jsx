@@ -1,17 +1,17 @@
-import Navbar from "./components/navbar/navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/home/home";
-import Login from "./components/login/login";
-import Signup from "./components/signup/signup";
-import Profile from "./components/profile/profile";
+import Navbar from './components/navbar/navbar';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './components/home/home';
+import Login from './components/login/login';
+import Signup from './components/signup/signup';
+import Profile from './components/profile/profile';
 
 console.log(`Current environment mode: ${import.meta.env.MODE}`);
 
 const App = () => {
   const parent = {
-    maxWidth: "1200px", // Default to desktop max-width
-    margin: "0 auto", // Center the navbar
-    padding: "1rem", // Add some padding
+    maxWidth: '1200px', // Default to desktop max-width
+    margin: '0 auto', // Center the navbar
+    padding: '1rem', // Add some padding
   };
 
   return (
@@ -21,12 +21,13 @@ const App = () => {
         <div style={parent}>
           {/* Setup Routes */}
           <Routes>
+            {/* Default route to redirect to login */}
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
-          {/* Other components can still go here or inside specific pages */}
         </div>
       </div>
     </BrowserRouter>

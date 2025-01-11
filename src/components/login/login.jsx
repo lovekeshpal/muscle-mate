@@ -6,11 +6,32 @@ import { login } from '../../api/auth';
 const Login = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState({ identifier: '', password: '' });
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear previous errors
+    setError({ identifier: '', password: '' });
+
+    // Check if the identifier (email/username) is empty
+    if (!identifier) {
+      setError((prevError) => ({
+        ...prevError,
+        identifier: 'Please enter your email or username.',
+      }));
+      return;
+    }
+
+    // Check if the password is empty
+    if (!password) {
+      setError((prevError) => ({
+        ...prevError,
+        password: 'Please enter your password.',
+      }));
+      return;
+    }
+
     try {
       const response = await login({
         username: identifier,
@@ -22,10 +43,31 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(response));
         navigate('/home');
       } else {
-        setError('Login failed. No token received.');
+        // This case should not occur if login function works correctly. Handle invalid login explicitly
+        setError({
+          identifier: '',
+          password:
+            'Invalid credentials. Please check your username/email or password.',
+        });
       }
     } catch (err) {
-      setError('Login failed. Please check your credentials and try again.');
+      // Specific error handling based on the error message
+      if (err.message.includes('Incorrect email/username or password')) {
+        setError({
+          identifier: '',
+          password: 'Incorrect email/username or password. Please try again.',
+        });
+      } else if (err.message.includes('User not found')) {
+        setError({
+          identifier: '',
+          password: 'User not found. Please sign up.',
+        });
+      } else {
+        setError({
+          identifier: '',
+          password: 'An error occurred. Please try again later.',
+        });
+      }
     }
   };
 
@@ -35,7 +77,7 @@ const Login = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
           Login
         </h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -53,7 +95,11 @@ const Login = () => {
               placeholder="Email or Username"
               required
             />
+            {error.identifier && (
+              <p className="text-red-500 text-xs mt-1">{error.identifier}</p>
+            )}
           </div>
+
           <div className="mb-6">
             <label
               className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
@@ -70,7 +116,11 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {error.password && (
+              <p className="text-red-500 text-xs mt-1">{error.password}</p>
+            )}
           </div>
+
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -80,6 +130,7 @@ const Login = () => {
             </button>
           </div>
         </form>
+
         <div className="mt-4 text-center">
           <p className="text-gray-700 dark:text-gray-300">
             New here?{' '}

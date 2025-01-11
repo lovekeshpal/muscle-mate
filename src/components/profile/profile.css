@@ -1,0 +1,5 @@
+.cropper-container .reactEasyCrop_CropArea {
+  cursor: move;
+  border: 2px dashed white;
+  box-sizing: border-box;
+}
