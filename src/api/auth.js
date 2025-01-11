@@ -66,7 +66,7 @@ export const signup = async (userData) => {
 // Logout function
 export const logout = async () => {
   try {
-    const user = JSON.parse(localStorage.getItem("token")); // Assuming the user object is saved in localStorage
+    const token = JSON.parse(localStorage.getItem("token")); // Assuming the user object is saved in localStorage
 
     // Check if the token exists
     if (!token) {
@@ -78,7 +78,7 @@ export const logout = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`, // Use the token from the user object
+        Authorization: `Bearer ${token}`, // Use the token from the user object
       },
     });
 

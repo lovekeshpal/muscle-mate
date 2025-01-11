@@ -1,13 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/auth';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState({ identifier: '', password: '' });
   const navigate = useNavigate();
+  const { login: contextLogin } = useContext(AuthContext);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,7 +42,8 @@ const Login = () => {
       });
 
       if (response.token) {
-        localStorage.setItem('token', JSON.stringify(response.token));
+        // Update the context
+        contextLogin(response.token);
         navigate('/home');
       } else {
         // This case should not occur if login function works correctly. Handle invalid login explicitly

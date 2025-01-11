@@ -1,12 +1,15 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../context/ThemeContext';
+import { AuthContext } from '../../context/AuthContext';
 import { logout } from '../../api/auth';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -101,34 +104,42 @@ const Navbar = () => {
             <span className="material-symbols-outlined mr-2">home</span>
             <span>Home</span>
           </Link>
-          <Link
-            onClick={toggleSidebar}
-            to="/profile"
-            className="flex items-center text-black dark:text-white py-2"
-          >
-            <span className="material-symbols-outlined mr-2">person</span>
-            <span>Profile</span>
-          </Link>
-          <Link
-            onClick={toggleSidebar}
-            to="/login"
-            className="flex items-center text-black dark:text-white py-2"
-          >
-            <span className="material-symbols-outlined mr-2">login</span>
-            <span>Login</span>
-          </Link>
-          <Link
-            onClick={toggleSidebar}
-            to="/signup"
-            className="flex items-center text-black dark:text-white py-2"
-          >
-            <span className="material-symbols-outlined mr-2">app_registration</span>
-            <span>Sign Up</span>
-          </Link>
-          <div className="flex items-center text-black dark:text-white py-2">
-            <span className="material-symbols-outlined mr-2">logout</span>
-            <span onClick={handleLogout}>Logout</span>
-          </div>
+          {isAuthenticated && (
+            <>
+              <Link
+                onClick={toggleSidebar}
+                to="/profile"
+                className="flex items-center text-black dark:text-white py-2"
+              >
+                <span className="material-symbols-outlined mr-2">person</span>
+                <span>Profile</span>
+              </Link>
+              <div className="flex items-center text-black dark:text-white py-2">
+                <span className="material-symbols-outlined mr-2">logout</span>
+                <span onClick={handleLogout}>Logout</span>
+              </div>
+            </>
+          )}
+{!isAuthenticated && (
+            <>
+              <Link
+                onClick={toggleSidebar}
+                to="/login"
+                className="flex items-center text-black dark:text-white py-2"
+              >
+                <span className="material-symbols-outlined mr-2">login</span>
+                <span>Login</span>
+              </Link>
+              <Link
+                onClick={toggleSidebar}
+                to="/signup"
+                className="flex items-center text-black dark:text-white py-2"
+              >
+                <span className="material-symbols-outlined mr-2">app_registration</span>
+                <span>Sign Up</span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </>
