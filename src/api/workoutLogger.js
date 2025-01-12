@@ -34,14 +34,31 @@ export const getWorkouts = async () => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch workouts');
+      const errorData = await response.json();
+      console.warn(
+        'API responded with an error:',
+        errorData.message || 'Unknown error'
+      );
+      return { data: [] };
     }
 
     const data = await response.json();
-    console.log(data);
-    return data;
+
+    if (data && Array.isArray(data)) {
+      const sortedData = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      return { data: sortedData };
+    }
+
+    if (data && data.message === 'No workouts found.') {
+      return { data: [] };
+    }
+
+    console.warn('Unexpected response format:', data);
+    return { data: [] };
   } catch (error) {
     console.error('Error during fetching workouts:', error.message);
-    throw error;
+    return { data: [] };
   }
 };

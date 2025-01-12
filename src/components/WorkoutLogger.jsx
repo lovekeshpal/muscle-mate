@@ -10,6 +10,7 @@ const WorkoutLogger = () => {
   });
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // State for error handling
   const modalRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);
@@ -33,8 +34,9 @@ const WorkoutLogger = () => {
     try {
       const response = await addWorkout(formData);
 
-      if (response && Array.isArray(response.workouts)) {
-        setWorkouts(response.workouts); // Assuming response contains an array of workouts
+      // Check if the response contains the 'workout' object
+      if (response && response.workout) {
+        setWorkouts((prevWorkouts) => [...prevWorkouts, response.workout]);
         setFormData({ type: '', duration: '', calories: '' });
         closeModal();
       } else {
@@ -51,20 +53,28 @@ const WorkoutLogger = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const fetchedWorkouts = await getWorkouts();
-        console.log(fetchedWorkouts);
-        if (Array.isArray(fetchedWorkouts)) {
-          setWorkouts(fetchedWorkouts);
+        const response = await getWorkouts();
+        console.log(response); // Log the response for debugging
+
+        // Handle cases where the response has a 'message' field
+        if (response && response.message === 'No workouts found.') {
+          setWorkouts([]); // Set workouts to an empty array
+          setError(null); // Clear any existing error
+        } else if (response && response.data && Array.isArray(response.data)) {
+          setWorkouts(response.data); // Set workouts to the data array
+          setError(null); // Clear any existing error
         } else {
-          console.error('Fetched workouts is not an array:', fetchedWorkouts);
+          setError('Unexpected response format.');
+          console.warn('Unexpected response format:', response);
         }
       } catch (error) {
+        setError('Error fetching workouts: ' + error.message);
         console.error('Error fetching workouts:', error.message);
       }
     };
 
     fetchWorkouts();
-  }, [workouts]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center p-10 bg-white dark:bg-customDark text-gray-900 dark:text-gray-100">
@@ -138,7 +148,11 @@ const WorkoutLogger = () => {
 
       <div className="mt-8 w-full max-w-md">
         <h3 className="text-xl font-semibold mb-4">Logged Workouts:</h3>
-        {Array.isArray(workouts) && workouts.length > 0 ? (
+        {error && <p className="text-red-500">{error}</p>}
+        {/* Show error message only if it exists */}
+        {workouts.length === 0 && !error ? (
+          <p>No workouts logged yet. Add one to get started.</p>
+        ) : (
           <ul className="space-y-2">
             {workouts.map((workout, index) => (
               <li key={index} className="p-4 border border-gray-300">
@@ -148,8 +162,6 @@ const WorkoutLogger = () => {
               </li>
             ))}
           </ul>
-        ) : (
-          <p>No workouts logged yet.</p>
         )}
       </div>
     </div>
