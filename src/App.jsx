@@ -5,6 +5,7 @@ import Login from './components/login/login';
 import Signup from './components/signup/signup';
 import Profile from './components/profile/profile';
 import PrivateRoute from './components/PrivateRoute';
+import WorkoutLogger from './components/WorkoutLogger';
 
 console.log(`Current environment mode: ${import.meta.env.MODE}`);
 
@@ -27,7 +28,11 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/profile" element={<PrivateRoute element={Profile} />} />
+            <Route
+              path="/profile"
+              element={<PrivateRoute element={Profile} />}
+            />
+            <Route path="/workoutlogger" element={<WorkoutLogger />} />
           </Routes>
         </div>
       </div>
