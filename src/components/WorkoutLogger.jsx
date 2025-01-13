@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { addWorkout, getWorkouts } from '../api/workoutLogger.js';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const WorkoutLogger = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +11,8 @@ const WorkoutLogger = () => {
   });
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // State for error handling
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [error, setError] = useState(null);
   const modalRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);
@@ -34,13 +36,12 @@ const WorkoutLogger = () => {
     try {
       const response = await addWorkout(formData);
 
-      // Check if the response contains the 'workout' object
       if (response && response.workout) {
         setWorkouts((prevWorkouts) => [...prevWorkouts, response.workout]);
         setFormData({ type: '', duration: '', calories: '' });
         closeModal();
       } else {
-        console.error('Invalid response format:', response);
+        console.error('Unexpected response format:', response);
       }
     } catch (error) {
       console.error('Error adding workout:', error.message);
@@ -49,30 +50,28 @@ const WorkoutLogger = () => {
     }
   };
 
-  // Fetch workouts when the component mounts
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const response = await getWorkouts();
-        console.log(response); // Log the response for debugging
+  const fetchWorkouts = async () => {
+    setFetchLoading(true);
+    setError(null);
 
-        // Handle cases where the response has a 'message' field
-        if (response && response.message === 'No workouts found.') {
-          setWorkouts([]); // Set workouts to an empty array
-          setError(null); // Clear any existing error
-        } else if (response && response.data && Array.isArray(response.data)) {
-          setWorkouts(response.data); // Set workouts to the data array
-          setError(null); // Clear any existing error
-        } else {
-          setError('Unexpected response format.');
-          console.warn('Unexpected response format:', response);
-        }
-      } catch (error) {
-        setError('Error fetching workouts: ' + error.message);
-        console.error('Error fetching workouts:', error.message);
+    try {
+      const response = await getWorkouts();
+
+      if (response && response.data && Array.isArray(response.data)) {
+        setWorkouts(response.data);
+      } else {
+        console.warn('Unexpected response format:', response);
+        setError('Unexpected response from server.');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching workouts:', error.message);
+      setError('Failed to fetch workouts.');
+    } finally {
+      setFetchLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchWorkouts();
   }, []);
 
@@ -134,34 +133,43 @@ const WorkoutLogger = () => {
 
               <button
                 type="submit"
-                className={`w-full bg-blue-500 text-white py-2 rounded ${
-                  loading && 'opacity-50 cursor-not-allowed'
-                }`}
+                className="w-full bg-green-500 text-white py-2 px-4 rounded"
                 disabled={loading}
               >
-                {loading ? 'Submitting...' : 'Submit'}
+                {loading ? 'Logging...' : 'Submit'}
               </button>
             </form>
           </div>
         </div>
       )}
 
+      {fetchLoading && <p>Loading workouts...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
       <div className="mt-8 w-full max-w-md">
-        <h3 className="text-xl font-semibold mb-4">Logged Workouts:</h3>
-        {error && <p className="text-red-500">{error}</p>}
-        {/* Show error message only if it exists */}
-        {workouts.length === 0 && !error ? (
-          <p>No workouts logged yet. Add one to get started.</p>
+        <h2 className="text-xl font-semibold mb-4">Workout History</h2>
+        {workouts.length > 0 ? (
+          workouts.map((workout, index) => (
+            <div
+              key={index}
+              className="border p-4 rounded-lg my-2 flex justify-between items-center"
+            >
+              <div>
+                {workout.type} - {workout.duration} mins - {workout.calories}{' '}
+                calories
+              </div>
+              <div className="flex items-center">
+                <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2 flex items-center justify-center">
+                  <PencilSquareIcon className="h-5 w-5" />
+                </button>
+                <button className="bg-red-500 text-white px-4 py-2 rounded flex items-center justify-center">
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          ))
         ) : (
-          <ul className="space-y-2">
-            {workouts.map((workout, index) => (
-              <li key={index} className="p-4 border border-gray-300">
-                <p>Type: {workout.type}</p>
-                <p>Duration: {workout.duration} minutes</p>
-                <p>Calories Burned: {workout.calories}</p>
-              </li>
-            ))}
-          </ul>
+          <p>No workouts logged yet.</p>
         )}
       </div>
     </div>
