@@ -4,9 +4,15 @@ import {
   getWorkouts,
   deleteWorkout,
 } from '../api/workoutLogger.js';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  FireIcon,
+  ClockIcon,
+} from '@heroicons/react/24/outline';
 
 const WorkoutLogger = () => {
+  const token = localStorage.getItem('token');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     type: '',
@@ -38,14 +44,11 @@ const WorkoutLogger = () => {
     setLoading(true);
 
     try {
-      const response = await addWorkout(formData);
-
+      const response = await addWorkout(formData, token);
       if (response && response.workout) {
         setWorkouts((prevWorkouts) => [...prevWorkouts, response.workout]);
         setFormData({ type: '', duration: '', calories: '' });
         closeModal();
-      } else {
-        console.error('Unexpected response format:', response);
       }
     } catch (error) {
       console.error('Error adding workout:', error.message);
@@ -57,14 +60,11 @@ const WorkoutLogger = () => {
   const fetchWorkouts = async () => {
     setFetchLoading(true);
     setError(null);
-
     try {
-      const response = await getWorkouts();
-
-      if (response && response.data && Array.isArray(response.data)) {
+      const response = await getWorkouts(token);
+      if (response && response.data) {
         setWorkouts(response.data);
       } else {
-        console.warn('Unexpected response format:', response);
         setError('Unexpected response from server.');
       }
     } catch (error) {
@@ -81,7 +81,7 @@ const WorkoutLogger = () => {
 
   const handleDelete = async (workoutId) => {
     try {
-      await deleteWorkout(workoutId);
+      await deleteWorkout(workoutId, token);
       setWorkouts((prevWorkouts) =>
         prevWorkouts.filter((workout) => workout._id !== workoutId)
       );
@@ -91,10 +91,10 @@ const WorkoutLogger = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-10 bg-white dark:bg-customDark text-gray-900 dark:text-gray-100">
+    <div className="p-10 bg-white dark:bg-customDark text-gray-800 dark:text-gray-100">
       <button
         onClick={openModal}
-        className="bg-green-500 text-white py-2 px-4 rounded"
+        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mb-6 transition duration-300"
       >
         + Log Workout
       </button>
@@ -105,7 +105,7 @@ const WorkoutLogger = () => {
           onClick={handleClickOutside}
         >
           <div
-            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
+            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md"
             ref={modalRef}
           >
             <h2 className="text-2xl font-bold mb-4">Log Your Workout</h2>
@@ -118,10 +118,9 @@ const WorkoutLogger = () => {
                   value={formData.type}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
                 />
               </label>
-
               <label className="block">
                 Duration (minutes):
                 <input
@@ -130,10 +129,9 @@ const WorkoutLogger = () => {
                   value={formData.duration}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
                 />
               </label>
-
               <label className="block">
                 Calories Burned:
                 <input
@@ -142,13 +140,12 @@ const WorkoutLogger = () => {
                   value={formData.calories}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
                 />
               </label>
-
               <button
                 type="submit"
-                className="w-full bg-green-500 text-white py-2 px-4 rounded"
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition duration-300"
                 disabled={loading}
               >
                 {loading ? 'Logging...' : 'Submit'}
@@ -161,33 +158,60 @@ const WorkoutLogger = () => {
       {fetchLoading && <p>Loading workouts...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="mt-8 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Workout History</h2>
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {workouts.length > 0 ? (
           workouts.map((workout, index) => (
             <div
               key={index}
-              className="border p-4 rounded-lg my-2 flex justify-between items-center"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
-              <div>
-                {workout.type} - {workout.duration} mins - {workout.calories}{' '}
-                calories
-              </div>
-              <div className="flex items-center">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2 flex items-center justify-center">
-                  <PencilSquareIcon className="h-5 w-5" />
-                </button>
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded flex items-center justify-center"
-                  onClick={() => handleDelete(workout._id)}
-                >
-                  <TrashIcon className="h-5 w-5" />
-                </button>
+              <div className="p-6">
+                <div className="mb-4">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    {workout.type}
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                    Logged on{' '}
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {new Date(workout.createdAt).toLocaleDateString()}{' '}
+                      {new Date(workout.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex items-center text-sm text-blue-500">
+                    <ClockIcon className="h-5 w-5 mr-1" />
+                    <span>{workout.duration} mins</span>
+                  </div>
+                  <div className="flex items-center text-sm text-red-500">
+                    <FireIcon className="h-5 w-5 mr-1" />
+                    <span>{workout.calories} cal</span>
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <button className="flex items-center justify-center bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition-colors duration-300">
+                    <PencilSquareIcon className="h-5 w-5 mr-1" />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(workout._id)}
+                    className="flex items-center justify-center bg-red-500 text-white rounded-lg px-3 py-2 hover:bg-red-600 transition-colors duration-300"
+                  >
+                    <TrashIcon className="h-5 w-5 mr-1" />
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <p>No workouts logged yet.</p>
+          <p className="text-center col-span-full text-gray-600 dark:text-gray-400">
+            No workouts logged yet. Click the "Log Workout" button to add your
+            first workout.
+          </p>
         )}
       </div>
     </div>

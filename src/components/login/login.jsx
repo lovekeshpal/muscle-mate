@@ -12,11 +12,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Clear previous errors
     setError({ identifier: '', password: '' });
 
-    // Check if the identifier (email/username) is empty
     if (!identifier) {
       setError((prevError) => ({
         ...prevError,
@@ -25,7 +22,6 @@ const Login = () => {
       return;
     }
 
-    // Check if the password is empty
     if (!password) {
       setError((prevError) => ({
         ...prevError,
@@ -40,13 +36,10 @@ const Login = () => {
         email: identifier,
         password,
       });
-
       if (response.token) {
-        // Update the context
         contextLogin(response.token);
         navigate('/home');
       } else {
-        // This case should not occur if login function works correctly. Handle invalid login explicitly
         setError({
           identifier: '',
           password:
@@ -54,33 +47,19 @@ const Login = () => {
         });
       }
     } catch (err) {
-      // Specific error handling based on the error message
-      if (err.message.includes('Incorrect email/username or password')) {
-        setError({
-          identifier: '',
-          password: 'Incorrect email/username or password. Please try again.',
-        });
-      } else if (err.message.includes('User not found')) {
-        setError({
-          identifier: '',
-          password: 'User not found. Please sign up.',
-        });
-      } else {
-        setError({
-          identifier: '',
-          password: 'An error occurred. Please try again later.',
-        });
-      }
+      setError({
+        identifier: '',
+        password: 'An error occurred. Please try again later.',
+      });
     }
   };
 
   return (
-    <div className="flex items-center justify-center bg-white dark:bg-customDark">
+    <div className="flex items-center justify-center min-h-50 bg-white dark:bg-customDark overflow-hidden">
       <div className="bg-white dark:bg-customDark p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
           Login
         </h2>
-
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -93,7 +72,7 @@ const Login = () => {
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-black leading-tight focus:outline-none focus:shadow-outline"
               id="identifier"
               placeholder="Email or Username"
               required
@@ -105,18 +84,17 @@ const Login = () => {
 
           <div className="mb-6">
             <label
-              className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
+              className="block text-gray-700  dark:text-gray-300 text-sm font-bold mb-2"
               htmlFor="password"
             >
               Password
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
               type="password"
-              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
               required
             />
             {error.password && (
@@ -124,24 +102,19 @@ const Login = () => {
             )}
           </div>
 
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Sign In
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+          >
+            Login
+          </button>
         </form>
-
-        <div className="mt-4 text-center">
-          <p className="text-gray-700 dark:text-gray-300">
-            New here?{' '}
-            <Link to="/signup" className="text-blue-500 hover:text-blue-700">
-              Sign up
-            </Link>
-          </p>
-        </div>
+        <p className="text-center text-gray-500 text-xs mt-4">
+          Don&apos;t have an account yet?
+          <Link to="/signup" className="text-blue-500">
+            Sign up here
+          </Link>
+        </p>
       </div>
     </div>
   );

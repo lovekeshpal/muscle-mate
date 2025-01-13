@@ -1,7 +1,14 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const token = localStorage.getItem('token'); // Fetching token from localStorage
+console.log(token);
 
 export const addWorkout = async (workoutData, token) => {
   try {
+    console.log('Headers:', {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
     const response = await fetch(`${BASE_URL}/api/workout/addworkouts`, {
       method: 'POST',
       headers: {
@@ -35,8 +42,6 @@ export const getWorkouts = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log('Raw API response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
