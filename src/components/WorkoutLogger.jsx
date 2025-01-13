@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { addWorkout, getWorkouts } from '../api/workoutLogger.js';
+import {
+  addWorkout,
+  getWorkouts,
+  deleteWorkout,
+} from '../api/workoutLogger.js';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const WorkoutLogger = () => {
@@ -74,6 +78,17 @@ const WorkoutLogger = () => {
   useEffect(() => {
     fetchWorkouts();
   }, []);
+
+  const handleDelete = async (workoutId) => {
+    try {
+      await deleteWorkout(workoutId);
+      setWorkouts((prevWorkouts) =>
+        prevWorkouts.filter((workout) => workout._id !== workoutId)
+      );
+    } catch (error) {
+      console.error('Error deleting workout:', error.message);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-10 bg-white dark:bg-customDark text-gray-900 dark:text-gray-100">
@@ -162,7 +177,10 @@ const WorkoutLogger = () => {
                 <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2 flex items-center justify-center">
                   <PencilSquareIcon className="h-5 w-5" />
                 </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded flex items-center justify-center">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded flex items-center justify-center"
+                  onClick={() => handleDelete(workout._id)}
+                >
                   <TrashIcon className="h-5 w-5" />
                 </button>
               </div>

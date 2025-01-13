@@ -68,3 +68,30 @@ export const getWorkouts = async (token) => {
     return { data: [] };
   }
 };
+
+export const deleteWorkout = async (workoutId, token) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/workout/deleteworkouts/${workoutId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete workout');
+    }
+
+    const data = await response.json();
+    console.log('Workout successfully deleted:', data);
+    return data;
+  } catch (error) {
+    console.error('Error during deleting workout:', error.message);
+    throw error;
+  }
+};
