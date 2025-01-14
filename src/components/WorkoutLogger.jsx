@@ -10,10 +10,12 @@ import {
   FireIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline';
+import workoutTypes from '../utils/constant.js';
 
 const WorkoutLogger = () => {
   const token = localStorage.getItem('token');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [formData, setFormData] = useState({
     type: '',
     duration: '',
@@ -34,7 +36,12 @@ const WorkoutLogger = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    setFormData((prev) => ({ ...prev, type: '' }));
+  };
+
+  const handleTypeChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -48,6 +55,7 @@ const WorkoutLogger = () => {
       if (response && response.workout) {
         setWorkouts((prevWorkouts) => [...prevWorkouts, response.workout]);
         setFormData({ type: '', duration: '', calories: '' });
+        setSelectedCategory('');
         closeModal();
       }
     } catch (error) {
@@ -111,23 +119,53 @@ const WorkoutLogger = () => {
             <h2 className="text-2xl font-bold mb-4">Log Your Workout</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <label className="block">
-                Workout Type:
-                <input
-                  type="text"
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
+                Category:
+                <select
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
                   required
                   className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
-                />
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {Object.keys(workoutTypes).map((category) => (
+                    <option key={category} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
+                </select>
               </label>
+
+              {selectedCategory && (
+                <label className="block">
+                  Workout Type:
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleTypeChange}
+                    required
+                    className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
+                  >
+                    <option value="" disabled>
+                      Select a type
+                    </option>
+                    {workoutTypes[selectedCategory].map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+
               <label className="block">
                 Duration (minutes):
                 <input
                   type="number"
                   name="duration"
                   value={formData.duration}
-                  onChange={handleChange}
+                  onChange={handleTypeChange}
                   required
                   className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
                 />
@@ -138,7 +176,7 @@ const WorkoutLogger = () => {
                   type="number"
                   name="calories"
                   value={formData.calories}
-                  onChange={handleChange}
+                  onChange={handleTypeChange}
                   required
                   className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-gray-100 dark:bg-gray-700"
                 />
@@ -192,12 +230,8 @@ const WorkoutLogger = () => {
                   </div>
                 </div>
                 <div className="flex justify-end space-x-2">
-                  <button className="flex items-center justify-center bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition-colors duration-300">
-                    <PencilSquareIcon className="h-5 w-5 mr-1" />
-                    Edit
-                  </button>
                   <button
-                    onClick={() => handleDelete(workout._id)}
+                    onDoubleClick={() => handleDelete(workout._id)}
                     className="flex items-center justify-center bg-red-500 text-white rounded-lg px-3 py-2 hover:bg-red-600 transition-colors duration-300"
                   >
                     <TrashIcon className="h-5 w-5 mr-1" />
@@ -209,8 +243,8 @@ const WorkoutLogger = () => {
           ))
         ) : (
           <p className="text-center col-span-full text-gray-600 dark:text-gray-400">
-            No workouts logged yet. Click the "Log Workout" button to add your
-            first workout.
+            No workouts logged yet. Click the &quot;Log Workout&quot; button to
+            add your first workout.
           </p>
         )}
       </div>
