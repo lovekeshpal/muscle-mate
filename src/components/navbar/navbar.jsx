@@ -109,6 +109,16 @@ const Navbar = () => {
             <>
               <Link
                 onClick={toggleSidebar}
+                to="/dashboard"
+                className="flex items-center text-black dark:text-white py-2"
+              >
+                <span className="material-symbols-outlined mr-2">
+                  dashboard
+                </span>
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                onClick={toggleSidebar}
                 to="/profile"
                 className="flex items-center text-black dark:text-white py-2"
               >

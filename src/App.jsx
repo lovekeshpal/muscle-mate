@@ -6,6 +6,7 @@ import Signup from './components/signup/signup';
 import Profile from './components/profile/profile';
 import PrivateRoute from './components/PrivateRoute';
 import WorkoutLogger from './components/WorkoutLogger';
+import Dashboard from './components/dashboard/dashboard';
 
 console.log(`Current environment mode: ${import.meta.env.MODE}`);
 
@@ -23,14 +24,39 @@ const App = () => {
         <div style={parent}>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
-            {/* <Route
+            <Route
+              path="/home"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/profile"
-              element={<PrivateRoute element={<Profile />} />}
-            /> */}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/workoutlogger" element={<WorkoutLogger />} />
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/workoutlogger"
+              element={
+                <PrivateRoute>
+                  <WorkoutLogger />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
       </div>

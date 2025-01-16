@@ -4,12 +4,7 @@ import {
   getWorkouts,
   deleteWorkout,
 } from '../api/workoutLogger.js';
-import {
-  PencilSquareIcon,
-  TrashIcon,
-  FireIcon,
-  ClockIcon,
-} from '@heroicons/react/24/outline';
+import { TrashIcon, FireIcon, ClockIcon } from '@heroicons/react/24/outline';
 import workoutTypes from '../utils/constant.js';
 
 const WorkoutLogger = () => {
@@ -100,12 +95,24 @@ const WorkoutLogger = () => {
 
   return (
     <div className="p-10 bg-white dark:bg-customDark text-gray-800 dark:text-gray-100">
-      <button
-        onClick={openModal}
-        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mb-6 transition duration-300"
-      >
-        + Log Workout
-      </button>
+      <div className="p-10 bg-white dark:bg-customDark text-gray-800 dark:text-gray-100 flex flex-col items-start">
+        <h2 className="text-3xl font-semibold mb-4">
+          Start Your Workout Today
+        </h2>
+
+        <p className="text-lg mb-6">
+          Success is the sum of small efforts, repeated day in and day out.
+        </p>
+
+        <div className="w-full flex justify-end">
+          <button
+            onClick={openModal}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mb-6 transition duration-300"
+          >
+            + Log Workout
+          </button>
+        </div>
+      </div>
 
       {isModalOpen && (
         <div
