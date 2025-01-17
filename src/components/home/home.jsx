@@ -185,6 +185,9 @@ const Home = () => {
             </p>
             {/* Social Media Icons */}
             <div className="flex space-x-4 text-2xl">
+              {/* <h1 className=" text-gray-700 dark:text-gray-300 m font-semibold">
+                Follow us
+              </h1> */}
               <a
                 href="#"
                 aria-label="Instagram"
@@ -214,8 +217,8 @@ const Home = () => {
             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white">
               Company
             </h3>
-            <ul className="flex flex-col items-end space-y-4">
-              <li>
+            <ul className="space-y-4 text-right">
+              <li className="text-right">
                 <a
                   href="#"
                   className="text-gray-800 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
@@ -223,7 +226,7 @@ const Home = () => {
                   About
                 </a>
               </li>
-              <li>
+              <li className="text-right">
                 <a
                   href="#"
                   className="text-gray-800 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
@@ -231,7 +234,7 @@ const Home = () => {
                   Careers
                 </a>
               </li>
-              <li>
+              <li className="text-right">
                 <a
                   href="#"
                   className="text-gray-800 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
@@ -239,7 +242,7 @@ const Home = () => {
                   Press
                 </a>
               </li>
-              <li>
+              <li className="text-right">
                 <a
                   href="#"
                   className="text-gray-800 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"

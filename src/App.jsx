@@ -12,7 +12,7 @@ console.log(`Current environment mode: ${import.meta.env.MODE}`);
 
 const App = () => {
   const parent = {
-    maxWidth: '1200px',
+    maxWidth: '1500px',
     margin: '0 auto',
     padding: '1rem',
   };
